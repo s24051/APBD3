@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace LegacyApp
 {
-    public class UserCreditService : IDisposable
+    public class UserCreditService : IDisposable, ICreditLimitService
     {
         /// <summary>
         /// Simulating database
@@ -22,6 +22,33 @@ namespace LegacyApp
         public void Dispose()
         {
             //Simulating disposing of resources
+        }
+
+        public int GetCredit(string lastName, DateTime dateOfBirth, ClientType type)
+        {
+            int limit = GetCreditLimit(lastName, dateOfBirth);
+            switch (type)
+            {
+                case ClientType.IMPORTANT:
+                    return limit * 2;
+                case ClientType.VIP:
+                    return limit;
+                default:
+                    return 0;
+            }
+        }
+
+        public bool HasLimit(ClientType type)
+        {
+            switch (type)
+            {
+                case ClientType.VIP:
+                    return false;
+                case ClientType.NORMAL:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>
